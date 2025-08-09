@@ -17,7 +17,7 @@ def main():
             "name": "Math",
             "dataset": "../dataset/math.json",
             "model_fn": LLMModel.solve_math,
-            "metrics": ["math_accuracy"],
+            "metrics": ["math_accuracy", "llm_judge"],
         },
     ]
 

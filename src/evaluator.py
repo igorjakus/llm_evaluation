@@ -36,6 +36,23 @@ class Evaluator:
         ref_num = extract_number(reference)
         pred_num = extract_number(prediction)
         return ref_num == pred_num and ref_num != ""
+    
+    def llm_judge(self, prompt: str, reference: str, prediction: str, judge_model: str = "gpt-oss:20b") -> float:
+        from model import LLMModel
+        
+        judge_prompt = f"""Rate the quality of this response on a scale of 1-10.
+
+Original Question: {prompt}
+Reference Answer: {reference}
+Model Response: {prediction}
+
+Provide only a number from 1-10 as your rating:"""
+        
+        response = LLMModel.model_fn(judge_prompt, model_name=judge_model)
+        
+        # Extract rating number
+        rating_match = re.search(r'\b([1-9]|10)\b', response)
+        return float(rating_match.group(1)) / 10.0 if rating_match else 0.0
 
     def evaluate(
         self, model_fn: Callable, dataset: List[Dict], metrics: List[str]
@@ -55,6 +72,8 @@ class Evaluator:
                 results["rouge"].append(self.rouge(ref, pred))
             if "math_accuracy" in metrics:
                 results["math_accuracy"].append(self.math_accuracy(ref, pred))
+            if "llm_judge" in metrics:
+                results["llm_judge"].append(self.llm_judge(data["prompt"], ref, pred))
 
         if "bertscore" in metrics:
             results["bertscore"] = self.bertscore(references, predictions)
@@ -80,3 +99,7 @@ class Evaluator:
             print(
                 f"Accuracy: {sum(results['math_accuracy']) / len(results['math_accuracy']):.4f}"
             )
+        
+        if "llm_judge" in results:
+            avg_score = sum(results['llm_judge']) / len(results['llm_judge'])
+            print(f"LLM Judge Score: {avg_score:.4f}")
