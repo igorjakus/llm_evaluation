@@ -2,7 +2,7 @@ import requests
 import json
 
 
-class OllamaModel:
+class LLMModel:
     def __init__(
         self, base_url="http://localhost:11434/api/generate", model_name="gemma3:1b"
     ):
@@ -31,15 +31,22 @@ class OllamaModel:
         base_url: str = "http://localhost:11434/api/generate",
         model_name: str = "gemma3:1b",
     ) -> str:
-        return OllamaModel(base_url, model_name).generate(prompt)
+        return LLMModel(base_url, model_name).generate(prompt)
 
     @staticmethod
     def summarize(text: str) -> str:
         prompt = f"Summarize very concisely the following text: {text}"
-        return OllamaModel.model_fn(prompt)
+        return LLMModel.model_fn(prompt)
+
+    @staticmethod
+    def solve_math(problem: str) -> str:
+        prompt = (
+            f"Solve this math problem and provide only the numerical answer: {problem}"
+        )
+        return LLMModel.model_fn(prompt)
 
 
 if __name__ == "__main__":
-    model = OllamaModel()
+    model = LLMModel()
     output = model.generate("Why is the sky blue?")
     print("Model output:", output)
