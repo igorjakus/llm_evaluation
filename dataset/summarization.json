@@ -1,0 +1,14 @@
+[
+    {
+        "prompt": "The cat sat on the mat. It looked very sleepy.",
+        "reference": "A sleepy cat sat on a mat."
+    },
+    {
+        "prompt": "OpenAI released a new model that can generate images from text.",
+        "reference": "OpenAI launched a model that makes images from text."
+    },
+    {
+        "prompt": "The weather today is sunny with light winds and no chance of rain.",
+        "reference": "It's a sunny, calm, and dry day."
+    }
+]
